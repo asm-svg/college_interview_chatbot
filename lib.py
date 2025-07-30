@@ -1,18 +1,14 @@
 import os
-
 def create_directory(path):
-    """Create the directory if it doesn't exist."""
     if not os.path.exists(path):
         os.makedirs(path)
 
 def write_questions_to_file(filepath, questions):
-    """Write question list to text file."""
     with open(filepath, 'w') as f:
         for category, question in questions:
             f.write(f"{category}::{question}\n")
 
 def read_questions_from_file(filepath):
-    """Read questions and return a 2D list by category."""
     questions_2d = {}
     with open(filepath, 'r') as f:
         for line in f:
@@ -22,14 +18,12 @@ def read_questions_from_file(filepath):
     return questions_2d
 
 def print_questions_by_category(questions_dict):
-    """Nicely print questions grouped by category."""
     for category, questions in questions_dict.items():
         print(f"\n[{category.upper()}]")
         for q in questions:
             print(f"- {q}")
 
 def get_questions():
-    """Returns a list of (category, question) tuples."""
     return [
        
         ("Personal", "Tell me about yourself"),
