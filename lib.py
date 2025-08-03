@@ -1,22 +1,27 @@
 import os
 
 def create_directory(path):
+    """Create a directory if it doesn't exist."""
     if not os.path.exists(path):
         os.makedirs(path)
 
 def write_questions_to_file(filepath, questions):
+    """Write questions to a file in category::question format."""
     with open(filepath, 'w') as f:
         for category, question in questions:
             f.write(f"{category}::{question}\n")
 
 def read_questions_from_file(filepath):
+    """Read questions from file and organize them by category."""
     questions_2d = {}
     try:
         with open(filepath, 'r') as f:
             for line in f:
                 if "::" in line:
                     try:
+                        # Split each line into category and question
                         category, question = line.strip().split("::", 1)
+                        # Organize questions by category
                         questions_2d.setdefault(category, []).append(question)
                     except:
                         # Skip lines that can't be processed
@@ -28,14 +33,18 @@ def read_questions_from_file(filepath):
     return questions_2d
 
 def normalize_response(response):
+    """Normalize user response to handle variations like 'yes', 'ya', etc."""
     response = response.lower().strip()
+    # Check for positive responses
     if response in ['yes', 'ya', 'y', 'yeah', 'yep', 'sure', 'ok', 'yup']:
         return 'yes'
+    # Check for negative responses
     elif response in ['no', 'n', 'nope', 'nah']:
         return 'no'
     return response
 
 def get_questions():
+    """Return the complete list of interview questions organized by category."""
     return [
         ("Personal", "Tell me about yourself"),
         ("Personal", "What do you do outside of school?"),
