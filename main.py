@@ -1,6 +1,6 @@
 import os
 import random
-from lib import (
+from util import ( 
     create_directory,
     write_questions_to_file,
     read_questions_from_file,
@@ -57,6 +57,12 @@ def provide_feedback(response, category):
     
     # Return a random feedback from the appropriate category
     return random.choice(feedbacks)
+
+def print_farewell_message():
+    """Print the farewell message that was repeated in multiple places."""
+    print("\nChatbot: It was great talking with you!")
+    print("Remember to be confident and authentic in your")
+    print("college interviews. Best of luck! 🌟")
 
 def print_welcome_message():
     """Print an attractive welcome message formatted for readability."""
@@ -131,9 +137,7 @@ def main():
         
         # Check if user wants to exit
         if normalized_input == 'exit' or normalized_input == 'quit':
-            print("\nChatbot: It was great talking with you!")
-            print("Remember to be confident and authentic in your")
-            print("college interviews. Best of luck! 🌟")
+            print_farewell_message()  # Replaced repeated lines with function call
             break
         
         # Provide feedback based on the type of response
@@ -143,9 +147,7 @@ def main():
             print("Would you like to elaborate on that?")
             elaboration = input("You: ")
             if normalize_response(elaboration) == 'exit' or normalize_response(elaboration) == 'quit':
-                print("\nChatbot: It was great talking with you!")
-                print("Remember to be confident and authentic in your")
-                print("college interviews. Best of luck! 🌟")
+                print_farewell_message()  # Replaced repeated lines with function call
                 break
             else:
                 print("\nChatbot: Thanks for sharing those details!")
@@ -160,9 +162,7 @@ def main():
         
         # Handle user's decision to continue or exit
         if normalized_continue == 'no' or normalized_continue == 'exit' or normalized_continue == 'quit':
-            print("\nChatbot: It was great talking with you!")
-            print("Remember to be confident and authentic in your")
-            print("college interviews. Best of luck! 🌟")
+            print_farewell_message()  # Replaced repeated lines with function call
             break
         elif normalized_continue == 'yes':
             print("\nChatbot: Awesome! Let's continue.")
