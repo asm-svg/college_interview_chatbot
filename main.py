@@ -59,7 +59,7 @@ def provide_feedback(response, category):
     return random.choice(feedbacks)
 
 def print_farewell_message():
-    """Print the farewell message that was repeated in multiple places."""
+    """Print the farewell message."""
     print("\nChatbot: It was great talking with you!")
     print("Remember to be confident and authentic in your")
     print("college interviews. Best of luck! 🌟")
