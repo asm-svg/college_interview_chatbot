@@ -79,5 +79,3 @@ def get_questions():
         ("Extra Curricular", "How do you handle commitment and teamwork?")
     ]
 
-
-
