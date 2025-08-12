@@ -1,45 +1,70 @@
 import os
+import sys
 
 def create_directory(path):
     """Create a directory if it doesn't exist."""
-    if not os.path.exists(path):
-        os.makedirs(path)
+    try:
+        if not os.path.exists(path):
+            os.makedirs(path)
+    except Exception as e:
+        print(f"Error creating directory {path}: {e}")
+        sys.exit(1)
 
 def write_questions_to_file(filepath, questions):
     """Write questions to a file in category::question format."""
-    with open(filepath, 'w') as f:
-        for category, question in questions:
-            f.write(f"{category}::{question}\n")
+    try:
+        with open(filepath, 'w') as f:
+            for category, question in questions:
+                f.write(f"{category}::{question}\n")
+        return True
+    except IOError as e:
+        print(f"Error writing to file {filepath}: {e}")
+        return False
+    except Exception as e:
+        print(f"Unexpected error writing to file: {e}")
+        return False
 
 def read_questions_from_file(filepath):
     """Read questions from file and organize them by category."""
     questions_2d = {}
     try:
         with open(filepath, 'r') as f:
-            for line in f:
-                if "::" in line:
-                    try:
-                        # Split each line into category and question
-                        category, question = line.strip().split("::", 1)
-                        # Organize questions by category
-                        questions_2d.setdefault(category, []).append(question)
-                    except:
-                        # Skip lines that can't be processed
-                        continue
+            for line_num, line in enumerate(f, 1):
+                line = line.strip()
+                if not line or "::" not in line:
+                    print(f"Warning: Skipping malformed line {line_num} in {filepath}")
+                    continue
+                try:
+                    category, question = line.split("::", 1)
+                    questions_2d.setdefault(category.strip(), []).append(question.strip())
+                except ValueError:
+                    print(f"Warning: Skipping malformed line {line_num} in {filepath}")
+                    continue
+    except FileNotFoundError:
+        print(f"Warning: Questions file not found at {filepath}")
+        return {}
+    except IOError as e:
+        print(f"Error reading questions file: {e}")
+        return {}
     except Exception as e:
-        # If there's any error reading the file, return an empty dict
-        print(f"Warning: Could not read questions file: {e}")
+        print(f"Unexpected error reading questions file: {e}")
         return {}
     return questions_2d
 
 def normalize_response(response):
     """Normalize user response to handle variations like 'yes', 'ya', etc."""
+    if not isinstance(response, str):
+        return ""
+    
     response = response.lower().strip()
+    if not response:
+        return ""
+    
     # Check for positive responses
-    if response in ['yes', 'ya', 'y', 'yeah', 'yep', 'sure', 'ok', 'yup']:
+    if response in ['yes', 'ya', 'y', 'yeah', 'yep', 'sure', 'ok', 'yup', 'yessir']:
         return 'yes'
     # Check for negative responses
-    elif response in ['no', 'n', 'nope', 'nah']:
+    elif response in ['no', 'n', 'nope', 'nah', 'no way']:
         return 'no'
     return response
 
@@ -79,3 +104,9 @@ def get_questions():
         ("Extra Curricular", "How do you handle commitment and teamwork?")
     ]
 
+def get_remaining_questions(questions_dict, asked_questions):
+    """Get count of remaining questions per category."""
+    remaining = {}
+    for category, questions in questions_dict.items():
+        remaining[category] = len([q for q in questions if q not in asked_questions])
+    return remaining
